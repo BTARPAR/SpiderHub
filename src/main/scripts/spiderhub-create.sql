@@ -24,8 +24,7 @@ create sequence hibernate_sequence start 1 increment 1;
 
     create table priorityOfTask (
         id int4 not null,
-        createDate timestamp,
-        priorityNum int4 not null,
+       
         priorityType varchar(255),
         primary key (id)
     );
@@ -57,7 +56,7 @@ create sequence hibernate_sequence start 1 increment 1;
 
     create table statusOfTask (
         id int4 not null,
-        isDelete boolean not null,
+       
         statusName varchar(255),
         primary key (id)
     );
