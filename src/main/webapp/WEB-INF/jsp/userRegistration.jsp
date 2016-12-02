@@ -14,6 +14,8 @@
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/bootstrap-theme.min.css" />
 <script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
+<link rel="shortcut icon" href="<%=request.getContextPath()%>/images/favicon.ico" type="image/x-icon">
+<link rel="icon" href="<%=request.getContextPath()%>/images/favicon.ico" type="image/x-icon">
 </head>
 <body
 	style="background: url(<%=request.getContextPath()%>/images/rbg1.jpg) no-repeat center center fixed">

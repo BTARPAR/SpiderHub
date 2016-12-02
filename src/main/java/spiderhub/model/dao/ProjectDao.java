@@ -10,11 +10,9 @@ public interface ProjectDao {
 	List<Project> getProjects();
 
 	Project saveProject(Project project);
-	
+
 	List<Project> getProjectofManager(Integer id);
 
 	Project checkLinkExist(String link);
-	
 
-	
 }

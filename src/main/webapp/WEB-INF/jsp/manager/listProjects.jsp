@@ -16,6 +16,7 @@
 				<th>Status</th>
 				<th>Project Type</th>
 				<th>Opertations</th>
+				<th>Report Generation</th>
 			</tr>
 			<c:forEach items="${projects}" var="project">
 				<tr>
@@ -38,6 +39,7 @@
 						</c:if> <c:if test="${project.delete }">
 					Done
 					</c:if></td>
+					<td><a href="report.html?id=${project.id }">Report</a></td>
 				</tr>
 			</c:forEach>
 		</table>

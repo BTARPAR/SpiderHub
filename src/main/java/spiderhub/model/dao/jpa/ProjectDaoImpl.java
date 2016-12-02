@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import spiderhub.model.Project;
-import spiderhub.model.User;
 import spiderhub.model.dao.ProjectDao;
 
 @Repository

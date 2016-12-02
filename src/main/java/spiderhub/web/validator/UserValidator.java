@@ -15,7 +15,7 @@ import spiderhub.model.dao.UserDao;
 @Component
 public class UserValidator implements Validator {
 
-	//taken from stackoverflow
+	// taken from stackoverflow
 	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private Pattern pattern;
@@ -23,8 +23,8 @@ public class UserValidator implements Validator {
 
 	@Autowired
 	private UserDao userDao;
-	
-	//helper method
+
+	// helper method
 	private boolean validateEmail(String email) {
 		pattern = Pattern.compile(EMAIL_PATTERN);
 
@@ -43,7 +43,13 @@ public class UserValidator implements Validator {
 		String email = user.getEmailAddress();
 		if (!StringUtils.hasText(user.getUserName()))
 			errors.rejectValue("userName", "error.field.empty");
+		else if (StringUtils.hasText(user.getUserName())) {
+			User u = userDao.getUserByUsername(user.getUserName());
+			if (u != null) {
+				errors.rejectValue("userName", "error.field.userName");
+			}
 
+		}
 		if (!StringUtils.hasText(user.getPassword()))
 			errors.rejectValue("password", "error.field.empty");
 
@@ -52,10 +58,9 @@ public class UserValidator implements Validator {
 		else if (!validateEmail(email)) {
 			// check using regex whether it is
 			errors.rejectValue("emailAddress", "error.field.email");
-		}
-		else if(StringUtils.hasText( email)){
+		} else if (StringUtils.hasText(email)) {
 			User u = userDao.checkEmailExist(email);
-			if(u != null ){
+			if (u != null) {
 				errors.rejectValue("emailAddress", "error.field.emailExist");
 			}
 		}
