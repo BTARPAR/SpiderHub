@@ -24,15 +24,15 @@ INSERT INTO public.users(
 	
 INSERT INTO public.project_type(
 	id, isdelete, projecttype)
-	VALUES (100, false, 'Software Project');
+	VALUES (101, false, 'Software Project');
 	
 INSERT INTO public.project_type(
 	id, isdelete, projecttype)
-	VALUES (100, false, 'Business Project');
+	VALUES (102, false, 'Business Project');
 	
 INSERT INTO public.project_type(
 	id, isdelete, projecttype)
-	VALUES (101, false, 'business');
+	VALUES (103, false, 'business');
 	
 INSERT INTO public.projects(
 	id, createddate, isdelete, projectdescription, projectgithublink, projectname, createduser_id, projecttype_id)
