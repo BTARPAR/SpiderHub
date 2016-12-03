@@ -72,4 +72,12 @@ public class UserDaoImpl implements UserDao {
 		return results.size() == 0 ? null : results.get(0);
 	}
 
+	@Override
+	public boolean isUserAvailable(String userName) {
+		String query = "from User where userName = :userName";
+		User user=(User) entityManager.createQuery(query, User.class)
+				.setParameter("userName", userName).getResultList();
+		return user == null ? false : true;
+	}
+
 }

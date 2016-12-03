@@ -2,20 +2,54 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html >
 <html>
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>User Registration</title>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/bootstrap.min.css" />
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/bootstrap-theme.min.css" />
 <script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
-<link rel="shortcut icon" href="<%=request.getContextPath()%>/images/favicon.ico" type="image/x-icon">
-<link rel="icon" href="<%=request.getContextPath()%>/images/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon"
+	href="<%=request.getContextPath()%>/images/favicon.ico"
+	type="image/x-icon">
+<link rel="icon" href="<%=request.getContextPath()%>/images/favicon.ico"
+	type="image/x-icon">
+
+<script>
+	function CheckUserName() {
+		var UserName = $("#userName").val();
+		
+		$.ajax({
+
+			type : "GET",
+			url : "/service/user/" + UserName,
+			contentType : "application/json",
+			data : UserName,
+			
+			success : function(data) {
+				alert(data);
+			}
+		});
+
+	}
+
+	$(document).ready(function() {
+		$("#userName").change(CheckUserName);
+	});
+</script>
+
 </head>
 <body
 	style="background: url(<%=request.getContextPath()%>/images/rbg1.jpg) no-repeat center center fixed">
@@ -41,9 +75,9 @@
 							<div class="form-group">
 								<div class="input-group">
 									<div class="input-group-addon"></div>
-									<form:input path="userName" type="text"
+									<form:input path="userName" type="text" id="userName"
 										placeholder="Enter User Name" class="form-control" />
-									<br /> <b><form:errors path="userName"
+									<span></span> <br /> <b><form:errors path="userName"
 											style="font-size:22px; color:blue;" /></b>
 								</div>
 							</div>

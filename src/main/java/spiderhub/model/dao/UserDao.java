@@ -21,6 +21,8 @@ public interface UserDao {
 
 	User checkEmailExist(String emailAddress);
 
+	boolean isUserAvailable(String userName);
+
 	
 	
 	

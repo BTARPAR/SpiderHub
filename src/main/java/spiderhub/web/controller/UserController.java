@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +35,12 @@ public class UserController {
 	@Autowired
 	UserValidator userValidator;
 
+	@RequestMapping(value = "/check.html")
+	public User checkUser(@PathVariable String userName) {
+		System.out.println("corret mapping");
+		return userDao.getUserByUsername(userName);
+	}
+	
 	@RequestMapping(value = "/userRegistration.html", method = RequestMethod.GET)
 	public String register(ModelMap models) {
 		models.put("user", new User());
