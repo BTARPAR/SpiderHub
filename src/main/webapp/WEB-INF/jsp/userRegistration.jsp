@@ -2,20 +2,25 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html >
 <html>
+
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<spring:url value="/js/jquery.js" var="jqueryUrl" />
+
+
+<script src="${jqueryUrl}"></script>
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>User Registration</title>
-<link rel="stylesheet"
-	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/bootstrap.min.css" />
 <link rel="stylesheet"
@@ -27,104 +32,9 @@
 <link rel="icon" href="<%=request.getContextPath()%>/images/favicon.ico"
 	type="image/x-icon">
 
-<script>
-	function CheckUserName() {
-		$("#userName").val($("#userName").val().trim());
-		var UserName = $("#userName").val();
-		if (UserName.length != 0) {
 
-			$.ajax({
-				type : "GET",
-				url : "checkuser.html",
-				dataType : "json",
-				contentType : "application/json",
-				data : "Username=" + UserName,
-				success : function(data) {
-					if (data == "true") {
-						$('#UName').html(
-								'<span style="color: red;">' + UserName
-										+ " is Already Taken" + "</span>");
-					} else if (data == "false") {
-						$('#UName').html(
-								'<span style="color: green;">' + UserName
-										+ " Available" + "</span>");
-					} else if (data == null) {
-						$('#UName').html
-					}
-				},
-				error : function(e) {
-					alert("empty");
 
-				}
-			});
-		} else {
-			$('#UName')
-					.html(
-							'<span style="color: blue;">UserName should not be empty</span>');
-		}
 
-	}
-
-	function CheckEmail() {
-		$("#email").val($("#email").val().trim());
-		var CheckEmail = $("#email").val();
-		if (CheckEmail.length != 0) {
-			$.ajax({
-				type : "GET",
-				url : "email.html",
-				dataType : "json",
-				contentType : "application/json",
-				data : "email=" + CheckEmail,
-				success : function(data) {
-					if (data == "true") {
-						$('#Email').html(
-								'<span style="color: red;">' + CheckEmail
-										+ " is Already Taken" + "</span>");
-					} else {
-						$('#Email').html(
-								'<span style="color: green;">' + CheckEmail
-										+ " is Available" + "</span>");
-
-					}
-				}
-
-			});
-		} else {
-			$('#Email')
-					.html(
-							'<span style="color: blue;">Email should not be empty</span>');
-		}
-
-	}
-
-	function ValidRegistration() {
-		var modelAttributeValue = '${user}'
-
-		$.ajax({
-			type : "POST",
-			url : "register.html",
-			dataType : "json",
-			contentType : "application/json",
-			data : "user=" + modelAttributeValue,
-			success : function(data) {
-				alert("vrushank");
-			
-				alert(data);
-			},
-			error : function(e) {
-				alert(e);
-
-			}
-		});
-
-	}
-
-	$(document).ready(function() {
-		$("#userName").change(CheckUserName);
-		$("#email").change(CheckEmail);
-		$("register").click(ValidRegistration);
-	});
-</script>
 
 </head>
 <body
@@ -144,76 +54,163 @@
 					</div>
 					<div class="panel-body">
 						<!-- This is a SPRING_MVC Form -->
-						<form:form modelAttribute="user" role="form">
 
-							<p style="color: red; text-align: center;">${sessionScope.error}</p>
-							<h4 class="text-info">User Name</h4>
-							<div class="form-group">
-								<div class="input-group">
-									<div class="input-group-addon"></div>
-									<form:input path="userName" type="text" id="userName"
-										placeholder="Enter User Name" class="form-control" />
-									<span id="UName"></span> <br /> <b> <form:errors
-											path="userName" style="font-size:22px; color:blue;" />
-									</b>
-								</div>
-							</div>
-							<h4 class="text-info">E-mail</h4>
-							<div class="form-group">
-								<div class="input-group">
-									<div class="input-group-addon"></div>
-									<form:input path="emailAddress" type="text"
-										placeholder="Enter Email Address" class="form-control"
-										id="email" />
-									<span id="Email"></span> <br /> <b><form:errors
-											path="emailAddress" style="font-size:22px; color:blue;" /></b>
-								</div>
-							</div>
-							<h4 class="text-info">Password</h4>
-							<div class="form-group">
-								<div class="input-group">
-									<div class="input-group-addon"></div>
-									<form:input path="password" type="text"
-										placeholder="Enter Password" class="form-control"
-										id="password" />
-									<br /> <b><form:errors path="password"
-											style="font-size:22px; color:blue;" /></b>
-								</div>
-							</div>
-							<h4 class="text-info">Phone Number</h4>
-							<div class="form-group">
-								<div class="input-group">
-									<div class="input-group-addon"></div>
-									<form:input path="phoneNumber" type="text"
-										placeholder="Enter Phone Number" class="form-control"
-										id="phoneNumber" />
-									<br /> <b><form:errors path="phoneNumber"
-											style="font-size:22px; color:blue;" /></b>
-								</div>
-							</div>
-							<h4 class="text-info">Select Role</h4>
-							<div class="form-group">
-								<div class="input-group">
-									<div class="input-group-addon"></div>
-									<select name="role" id="role">
-										<c:forEach items="${UserRole}" var="urole">
-											<c:if test="${urole.id ne 1000 }">
-												<option value="${urole.id}">${urole.userRole}</option>
-											</c:if>
-										</c:forEach>
-									</select>
-								</div>
-							</div>
-							<input class="btn btn-primary" type="submit" name="register"
-								value="Register Me">
-							<hr />
-							Already Registered ? <a href="login.html">Login here</a>
 
+
+
+						<spring:url value="/userRegistration.html" var="formUrl" />
+						<spring:url value="/userRegistration.json" var="formJsonUrl" />
+
+
+
+						<form:form modelAttribute="user" action="${formUrl}" role="form"
+							id="add-user-form">
+
+
+							<fieldset>
+								<p style="color: red; text-align: center;">${sessionScope.error}</p>
+								<h4 class="text-info">User Name</h4>
+								<div class="form-group" id="userName">
+									<div class="input-group">
+										<div class="input-group-addon"></div>
+										<form:input path="userName" type="text"
+											placeholder="Enter User Name" class="form-control" />
+										<br /> <span class="help-inline"><form:errors
+												path="userName" /></span>
+									</div>
+								</div>
+								<h4 class="text-info">E-mail</h4>
+								<div class="form-group" id="emailAddress">
+									<div class="input-group">
+										<div class="input-group-addon"></div>
+										<form:input path="emailAddress" type="text"
+											placeholder="Enter Email Address" class="form-control" />
+										<br /> <span class="help-inline"><form:errors
+												path="emailAddress" /></span>
+									</div>
+								</div>
+								<h4 class="text-info">Password</h4>
+								<div class="form-group" id="password">
+									<div class="input-group">
+										<div class="input-group-addon"></div>
+										<form:input path="password" type="text"
+											placeholder="Enter Password" class="form-control" />
+										<br /><span class="help-inline"><form:errors
+												path="password" /></span><%--  <b><form:errors path="password"
+												style="font-size:22px; color:blue;" /></b> --%>
+									</div>
+								</div>
+								<h4 class="text-info">Phone Number</h4>
+								<div class="form-group" id="phoneNumber">
+									<div class="input-group">
+										<div class="input-group-addon"></div>
+										<form:input path="phoneNumber" type="text"
+											placeholder="Enter Phone Number" class="form-control" />
+										<br /> <span class="help-inline"><form:errors
+												path="phoneNumber" /></span><%-- <b><form:errors path="phoneNumber"
+												style="font-size:22px; color:blue;" /></b> --%>
+									</div>
+								</div>
+								<h4 class="text-info">Select Role</h4>
+								<div class="form-group" id="userRole">
+									<div class="input-group">
+										<div class="input-group-addon"></div>
+										<select name="role">
+											<c:forEach items="${UserRole}" var="urole">
+												<c:if test="${urole.id ne 1000 }">
+													<option value="${urole.id}">${urole.userRole}</option>
+												</c:if>
+											</c:forEach>
+										</select>
+									</div>
+								</div>
+								<input class="btn btn-primary" type="submit" name="register"
+									value="Register Me">
+								<hr />
+								Already Registered ? <a href="login.html">Login here</a>
+
+							</fieldset>
 						</form:form>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+
+
+
+
+
+	<script type="text/javascript">
+		function collectFormData(fields) {
+			var data = {};
+			for (var i = 0; i < fields.length; i++) {
+				var $item = $(fields[i]);
+				data[$item.attr('name')] = $item.val();
+			}
+			return data;
+		}
+		$(document)
+				.ready(
+						function() {
+							var $form = $('#add-user-form');
+							$form
+									.bind(
+											'submit',
+											function(e) {
+												// Ajax validation
+												var $inputs = $form
+														.find('input');
+												var data = collectFormData($inputs);
+												$
+														.post(
+																'${formJsonUrl}',
+																data,
+																function(
+																		response) {
+																	$form
+																			.find(
+																					'.form-group')
+																			.removeClass(
+																					'error');
+																	$form
+																			.find(
+																					'.help-inline')
+																			.empty();
+																	$form
+																			.find(
+																					'.alert')
+																			.remove();
+																	if (response.status == 'FAIL') {
+																		for (var i = 0; i < response.errorMessageList.length; i++) {
+																			var item = response.errorMessageList[i];
+																			var $controlGroup = $('#'
+																					+ item.fieldName);
+																			$controlGroup
+																					.addClass('error');
+																			$controlGroup
+																					.find(
+																							'.help-inline')
+																					.html(
+																							item.message);
+																		}
+																	} else {
+																		$form
+																				.unbind('submit');
+																		$form
+																				.submit();
+																	}
+																}, 'json');
+												e.preventDefault();
+												return false;
+											});
+						});
+	</script>
+
+
+
+
+
 </body>
 </html>

@@ -41,8 +41,9 @@ public class UserValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 		User user = (User) target;
 		String email = user.getEmailAddress();
-		if (!StringUtils.hasText(user.getUserName()))
+		if (!StringUtils.hasText(user.getUserName())){
 			errors.rejectValue("userName", "error.field.empty");
+		}
 		else if (StringUtils.hasText(user.getUserName())) {
 			User u = userDao.getUserByUsername(user.getUserName());
 			if (u != null) {

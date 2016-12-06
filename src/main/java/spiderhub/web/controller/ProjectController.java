@@ -1,5 +1,6 @@
 package spiderhub.web.controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,8 +23,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import spiderhub.model.Project;
 import spiderhub.model.Task;
@@ -33,11 +40,13 @@ import spiderhub.model.dao.ProjectTypeDao;
 import spiderhub.model.dao.TaskActivityDao;
 import spiderhub.model.dao.TaskDao;
 import spiderhub.model.dao.UserDao;
+import spiderhub.web.Tag;
 import spiderhub.web.validator.ProjectValidator;
 
 @Controller
 @SessionAttributes("project")
 public class ProjectController {
+	List<String> data = new ArrayList<String>();
 
 	Set<User> users = new HashSet<>();
 
@@ -349,11 +358,53 @@ public class ProjectController {
 		Set<User> detail = project.getUsersRelatedProject();
 
 		projectNotInProject.removeAll(detail);
+		data.clear();
+		// for adding autocomplete
+		for (User user : projectNotInProject) {
+			data.add(user.getUsername());
+			System.out.println("data: 899838935895");
 
-		models.put("users", projectNotInProject);
-		models.put("project", projectDao.getProject(id));
+		}
+/*		models.put("users", projectNotInProject);
+*/		models.put("project", projectDao.getProject(id));
 
 		return "manager/addUserInProject";
+	}
+
+	@RequestMapping(value = "/getTags.json", method = RequestMethod.GET)
+	public @ResponseBody List<String> getTags(@RequestParam("term") String tags, HttpServletResponse response,
+			ModelMap models) throws JsonGenerationException, JsonMappingException, IOException {
+		response.setContentType("application/json");
+		
+		//models.put("users", simulateSearchResultList(simulateSearchResult(tags)));
+
+		return simulateSearchResult(tags);
+
+	}
+	private List<String> simulateSearchResult(String tagName) {
+
+		List<String> result = new ArrayList<String>();
+		result.clear();
+		// iterate a list and filter by tagName
+		for (String tag : data) {
+			if (tag.contains(tagName)) {
+				System.out.println("Tagagname--==-=-=-=-=" + tag);
+				result.add(tag);
+			}
+		}
+
+		return result;
+	}
+
+	private List<User> simulateSearchResultList(List<String> tags) {
+
+		List<User> users = new ArrayList<User>();
+		for (String userName : tags) {
+			User user = userDao.getUserByUsername(userName);
+			users.add(user);
+		}
+
+		return users;
 	}
 
 	@RequestMapping(value = "/manager/addUserInProject.html", method = RequestMethod.POST)
@@ -363,17 +414,17 @@ public class ProjectController {
 		Set<User> detail = projectDao.getProject(id).getUsersRelatedProject();
 
 		String[] chkSms = request.getParameterValues("chksms");
-		int[] value = new int[chkSms.length];
+		String[] value = new String[chkSms.length];
 
 		for (int i = 0; i < chkSms.length; i++)
-			value[i] = Integer.parseInt(chkSms[i]);
+			value[i] =chkSms[i];
 
 		System.out.println("adding user to project" + chkSms);
 
 		users.addAll(detail);
 
 		for (int i = 0; i < value.length; i++) {
-			users.add(userDao.getUser(value[i]));
+			users.add(userDao.getUserByUsername((value[i])));
 		}
 
 		project.setUsersRelatedProject(users);
