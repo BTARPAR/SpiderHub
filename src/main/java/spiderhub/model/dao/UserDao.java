@@ -21,7 +21,10 @@ public interface UserDao {
 
 	User checkEmailExist(String emailAddress);
 
-	boolean isUserAvailable(String userName);
+	User isUserAvailable(String userName);
+
+	User ajaxEmailExist(String emailAddress);
+	
 
 	
 	

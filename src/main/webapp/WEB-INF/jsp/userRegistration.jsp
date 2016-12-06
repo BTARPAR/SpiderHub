@@ -29,17 +29,91 @@
 
 <script>
 	function CheckUserName() {
+		$("#userName").val($("#userName").val().trim());
 		var UserName = $("#userName").val();
-		
-		$.ajax({
+		if (UserName.length != 0) {
 
-			type : "GET",
-			url : "/service/user/" + UserName,
+			$.ajax({
+				type : "GET",
+				url : "checkuser.html",
+				dataType : "json",
+				contentType : "application/json",
+				data : "Username=" + UserName,
+				success : function(data) {
+					if (data == "true") {
+						$('#UName').html(
+								'<span style="color: red;">' + UserName
+										+ " is Already Taken" + "</span>");
+					} else if (data == "false") {
+						$('#UName').html(
+								'<span style="color: green;">' + UserName
+										+ " Available" + "</span>");
+					} else if (data == null) {
+						$('#UName').html
+					}
+				},
+				error : function(e) {
+					alert("empty");
+
+				}
+			});
+		} else {
+			$('#UName')
+					.html(
+							'<span style="color: blue;">UserName should not be empty</span>');
+		}
+
+	}
+
+	function CheckEmail() {
+		$("#email").val($("#email").val().trim());
+		var CheckEmail = $("#email").val();
+		if (CheckEmail.length != 0) {
+			$.ajax({
+				type : "GET",
+				url : "email.html",
+				dataType : "json",
+				contentType : "application/json",
+				data : "email=" + CheckEmail,
+				success : function(data) {
+					if (data == "true") {
+						$('#Email').html(
+								'<span style="color: red;">' + CheckEmail
+										+ " is Already Taken" + "</span>");
+					} else {
+						$('#Email').html(
+								'<span style="color: green;">' + CheckEmail
+										+ " is Available" + "</span>");
+
+					}
+				}
+
+			});
+		} else {
+			$('#Email')
+					.html(
+							'<span style="color: blue;">Email should not be empty</span>');
+		}
+
+	}
+
+	function ValidRegistration() {
+		var modelAttributeValue = '${user}'
+
+		$.ajax({
+			type : "POST",
+			url : "register.html",
+			dataType : "json",
 			contentType : "application/json",
-			data : UserName,
-			
+			data : "user=" + modelAttributeValue,
 			success : function(data) {
+				alert("vrushank");
+			
 				alert(data);
+			},
+			error : function(e) {
+				alert(e);
+
 			}
 		});
 
@@ -47,6 +121,8 @@
 
 	$(document).ready(function() {
 		$("#userName").change(CheckUserName);
+		$("#email").change(CheckEmail);
+		$("register").click(ValidRegistration);
 	});
 </script>
 
@@ -77,8 +153,9 @@
 									<div class="input-group-addon"></div>
 									<form:input path="userName" type="text" id="userName"
 										placeholder="Enter User Name" class="form-control" />
-									<span></span> <br /> <b><form:errors path="userName"
-											style="font-size:22px; color:blue;" /></b>
+									<span id="UName"></span> <br /> <b> <form:errors
+											path="userName" style="font-size:22px; color:blue;" />
+									</b>
 								</div>
 							</div>
 							<h4 class="text-info">E-mail</h4>
@@ -86,9 +163,10 @@
 								<div class="input-group">
 									<div class="input-group-addon"></div>
 									<form:input path="emailAddress" type="text"
-										placeholder="Enter Email Address" class="form-control" />
-									<br /> <b><form:errors path="emailAddress"
-											style="font-size:22px; color:blue;" /></b>
+										placeholder="Enter Email Address" class="form-control"
+										id="email" />
+									<span id="Email"></span> <br /> <b><form:errors
+											path="emailAddress" style="font-size:22px; color:blue;" /></b>
 								</div>
 							</div>
 							<h4 class="text-info">Password</h4>
@@ -96,7 +174,8 @@
 								<div class="input-group">
 									<div class="input-group-addon"></div>
 									<form:input path="password" type="text"
-										placeholder="Enter Password" class="form-control" />
+										placeholder="Enter Password" class="form-control"
+										id="password" />
 									<br /> <b><form:errors path="password"
 											style="font-size:22px; color:blue;" /></b>
 								</div>
@@ -106,7 +185,8 @@
 								<div class="input-group">
 									<div class="input-group-addon"></div>
 									<form:input path="phoneNumber" type="text"
-										placeholder="Enter Phone Number" class="form-control" />
+										placeholder="Enter Phone Number" class="form-control"
+										id="phoneNumber" />
 									<br /> <b><form:errors path="phoneNumber"
 											style="font-size:22px; color:blue;" /></b>
 								</div>
@@ -115,7 +195,7 @@
 							<div class="form-group">
 								<div class="input-group">
 									<div class="input-group-addon"></div>
-									<select name="role">
+									<select name="role" id="role">
 										<c:forEach items="${UserRole}" var="urole">
 											<c:if test="${urole.id ne 1000 }">
 												<option value="${urole.id}">${urole.userRole}</option>

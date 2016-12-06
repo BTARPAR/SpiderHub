@@ -15,11 +15,5 @@ public class UserService {
 	@Autowired
 	UserDao userDao;
 
-	@RequestMapping(value = "/service/user/{userName}", method = RequestMethod.GET)
-	
-	public boolean getUserName(@PathVariable String UserName) {
-		System.out.println(UserName);
-		return userDao.isUserAvailable(UserName);
-	}
 
 }

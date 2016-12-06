@@ -54,7 +54,6 @@ public class UserDaoImpl implements UserDao {
 		return entityManager.createQuery(query, User.class).getResultList();
 	}
 
-
 	@Override
 	public List<User> getUsrToAssignTask(Integer id) {
 
@@ -73,11 +72,28 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public boolean isUserAvailable(String userName) {
-		String query = "from User where userName = :userName";
-		User user=(User) entityManager.createQuery(query, User.class)
-				.setParameter("userName", userName).getResultList();
-		return user == null ? false : true;
+	public User isUserAvailable(String userName) {
+		String query = "from User where userName = LOWER(:userName)";
+		List<User> user=  entityManager.createQuery(query, User.class).setParameter("userName", userName).getResultList();
+		if(user.isEmpty()){
+			User u = new User();
+			return u; 
+		}else{
+		return user.get(0);
+		}
 	}
 
+	@Override
+	public User ajaxEmailExist(String emailAddress) {
+		String query = "from User where emailAddress = LOWER(:emailAddress)";
+		List<User> results = entityManager.createQuery(query, User.class).setParameter("emailAddress", emailAddress).getResultList();
+		
+		if(results.isEmpty()){
+			User u = new User();
+			return u;
+		}else{
+			return results.get(0);
+		}
+		
+	}
 }

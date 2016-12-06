@@ -1,8 +1,10 @@
 package spiderhub.web.controller;
 
+import java.io.IOException;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,8 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import spiderhub.model.User;
 import spiderhub.model.dao.UserDao;
@@ -34,13 +41,15 @@ public class UserController {
 
 	@Autowired
 	UserValidator userValidator;
+	
+	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@RequestMapping(value = "/check.html")
 	public User checkUser(@PathVariable String userName) {
 		System.out.println("corret mapping");
 		return userDao.getUserByUsername(userName);
 	}
-	
+
 	@RequestMapping(value = "/userRegistration.html", method = RequestMethod.GET)
 	public String register(ModelMap models) {
 		models.put("user", new User());
@@ -49,13 +58,14 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/userRegistration.html", method = RequestMethod.POST)
+	@ResponseBody
 	public String register(@ModelAttribute User user, BindingResult bindingResult, ModelMap models,
 			HttpServletRequest request) {
 
 		// for validation
 		userValidator.validate(user, bindingResult);
 		if (bindingResult.hasErrors()) {
-		//	models.put("user", new User());
+			// models.put("user", new User());
 			models.put("UserRole", roleDao.getUserRoles());
 			System.out.println("validation done");
 			return "userRegistration";
@@ -165,4 +175,40 @@ public class UserController {
 		usertobedisabled = userDao.saveUser(usertobedisabled);
 		return "redirect:userManagement.html";
 	}
+
+	@RequestMapping(value = "/checkuser.html", method = RequestMethod.GET)
+	@ResponseBody
+	public String getUserName(@RequestParam String Username, HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		
+		String uname = "false";
+		User user = userDao.isUserAvailable(Username);
+		if(user.getUsername() != null){
+			uname = "true";
+		}
+		
+		response.setContentType("application/json");
+       objectMapper.writeValue(response.getWriter(), uname);
+
+		return null ;
+	}
+	
+	@RequestMapping(value = "/email.html", method = RequestMethod.GET)
+	@ResponseBody
+	public String getEmail(@RequestParam String email, HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException 
+	{
+		
+		String check = "false";
+		User user = userDao.ajaxEmailExist(email);
+		if(user.getEmailAddress() != null){
+			check = "true";
+		}
+		
+		response.setContentType("application/json");
+       objectMapper.writeValue(response.getWriter(), check);
+
+		return null ;
+	}
+	
+	
+	
 }
